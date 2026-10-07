@@ -1,0 +1,175 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>FraudShield AI | Real-Time Financial Fraud Intelligence</title>
+<style>
+:root{--bg:#07111f;--p:#0c1a2e;--p2:#102338;--ln:#1e3550;--tx:#eaf2ff;--mu:#8da4bf;--cy:#4dd8ff;--grn:#38e6a0;--amb:#ffc857;--hi:#ff8a4c;--crit:#ff4d5e;--bl:#6aa8ff;--pu:#b08cff;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}*{box-sizing:border-box;margin:0}
+body{background:radial-gradient(circle at 8% 0,rgba(50,123,255,.16),transparent 35%),radial-gradient(circle at 95% 8%,rgba(77,216,255,.09),transparent 28%),var(--bg);color:var(--tx);font:13px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+button,input,select{font:inherit;color:var(--tx)}button:focus-visible,input:focus-visible,select:focus-visible,tr:focus-visible,.node:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+.app{display:grid;grid-template-columns:225px 1fr}
+aside{position:sticky;top:0;height:100vh;padding:20px 14px;border-right:1px solid var(--ln);background:rgba(7,17,31,.9);backdrop-filter:blur(10px)}
+.brand{display:flex;gap:10px;align-items:center;margin-bottom:26px}.logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-weight:900;color:#03101d;background:linear-gradient(135deg,var(--cy),var(--bl));box-shadow:0 0 26px rgba(77,216,255,.3)}
+.brand b{font-size:16px;display:block}.brand small{color:var(--mu);font-size:10px}
+nav{display:grid;gap:6px}nav button{border:0;background:none;text-align:left;padding:10px 12px;border-radius:9px;color:var(--mu);cursor:pointer}nav button:hover,nav button.on{background:#12253d;color:#fff}
+.eng{position:absolute;left:14px;right:14px;bottom:18px;padding:11px;border:1px solid #1e4b45;background:#0b2928;border-radius:11px;font-size:11px;color:#a7f4d8}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--grn);box-shadow:0 0 10px var(--grn);margin-right:6px;animation:pl 1.6s infinite}.dot.pz{background:var(--amb);box-shadow:0 0 10px var(--amb);animation:none}
+@keyframes pl{50%{opacity:.4}}
+main{padding:22px 26px 50px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}.top h1{font-size:23px;letter-spacing:-.4px}.top p{color:var(--mu)}
+.acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.live{padding:7px 12px;border:1px solid #224762;background:#0e2235;border-radius:99px;font-size:11px;color:#bdeeff}
+.btn{border:1px solid #245878;background:#12344f;padding:8px 12px;border-radius:9px;cursor:pointer;font-size:12px;transition:.15s}.btn:hover{background:#1a4a6c}.btn:disabled{opacity:.4;cursor:default}.btn.d{background:#3a1a22;border-color:#6d313c;color:#ffb3ba}
+.q{display:flex;gap:10px;align-items:center;margin-bottom:14px;padding:10px 14px;border:1px solid var(--ln);border-radius:12px;background:linear-gradient(90deg,rgba(77,216,255,.07),transparent);color:var(--mu);font-size:12px;flex-wrap:wrap}.q s{color:#6b829c}.q b{color:var(--cy)}
+.kp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.card{background:linear-gradient(180deg,rgba(18,38,61,.95),rgba(11,27,45,.95));border:1px solid var(--ln);border-radius:14px;padding:15px;min-width:0}
+.kc{cursor:pointer;transition:.18s}.kc:hover{transform:translateY(-2px);border-color:#38628a}.kc .l{color:var(--mu);font-size:11px;margin-bottom:6px}.kc .v{font-size:27px;font-weight:800;letter-spacing:-.6px}.kc .s{font-size:11px;color:var(--mu);margin-top:4px}
+.g2{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;margin-bottom:14px}.g3{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+h3{font-size:14px;margin-bottom:10px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}h3 span{font-size:11px;color:var(--mu);font-weight:400}
+.tools{display:grid;grid-template-columns:1fr 170px 150px;gap:8px;margin-bottom:10px}
+input,select{width:100%;background:#091827;border:1px solid #1e3852;padding:9px;border-radius:9px;font-size:12px}
+.tw{overflow:auto;max-height:340px}table{width:100%;border-collapse:collapse}th,td{padding:9px 8px;text-align:left;border-bottom:1px solid #19304a;font-size:12px;white-space:nowrap}th{position:sticky;top:0;background:#102238;color:#7891ad;font-weight:600}
+tbody tr{cursor:pointer;transition:background .15s}tbody tr:hover{background:rgba(255,255,255,.04)}tr.sel{background:rgba(77,216,255,.09);box-shadow:inset 3px 0 var(--cy)}tr.new{animation:fl 1.6s}@keyframes fl{from{background:rgba(255,77,94,.3)}}
+.rb{height:5px;width:70px;background:#172c45;border-radius:9px;margin-top:4px;overflow:hidden}.rb i{display:block;height:100%;border-radius:9px;transition:width .4s}
+.b{font-size:10px;font-weight:800;padding:4px 8px;border-radius:99px}.b.c{background:#4a1820;color:#ff7d89}.b.h{background:#4a2814;color:#ffa66f}.b.m{background:#3a3217;color:#ffd46b}.b.l{background:#10372e;color:#6df0bd}
+.sb{display:flex;justify-content:space-between;align-items:center;padding:12px;background:#0a2035;border:1px solid #1d405f;border-radius:11px;margin-bottom:9px}.big{font-size:34px;font-weight:900}
+.rs{display:grid;grid-template-columns:1fr auto;gap:10px;padding:9px 11px;border-radius:9px;background:#0d1d30;border:1px solid #19324e;margin-bottom:6px}.rs b{display:block;font-size:12px}.rs p{color:var(--mu);font-size:11px}.rs em{font-style:normal;font-weight:800}
+.act{border:1px solid #63303a;background:linear-gradient(135deg,#34161e,#24131b);padding:12px;border-radius:11px;margin-top:8px}.act.ok{border-color:#245b4d;background:#0d2924}.act.md{border-color:#6b5a1f;background:#2a2410}.act p{font-size:11px;color:#c9a6aa;margin-top:4px}.act.ok p{color:#9fcfbf}.act.md p{color:#d9c585}
+.net{height:350px;border:1px solid #193755;border-radius:12px;background:linear-gradient(rgba(41,77,109,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(41,77,109,.1) 1px,transparent 1px),#081725;background-size:26px 26px;position:relative;overflow:hidden}svg{width:100%;height:100%;display:block}
+.ed{stroke:#2f5273;stroke-width:1.4}.ed.hot{stroke:var(--crit);stroke-width:2;filter:drop-shadow(0 0 3px var(--crit))}
+.node{cursor:pointer}.node circle{stroke-width:2;transition:.15s}.node:hover circle,.node.on circle{stroke-width:4;filter:drop-shadow(0 0 7px rgba(255,255,255,.3))}.nl{fill:#dcecff;font-size:9px;font-weight:700;pointer-events:none}
+.info{margin-top:9px;padding:9px 11px;border:1px solid #254562;border-radius:9px;background:#07131f;font-size:12px;color:#cfe1f5;min-height:44px}.info span{color:var(--mu)}
+.lg{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px;font-size:10px;color:var(--mu)}.lg i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.it{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px;border:1px solid #1a334e;background:#0c1c2d;border-radius:10px;margin-bottom:8px;cursor:pointer;transition:.15s}.it:hover,.it.on{border-color:#3a6a94;background:#10253b}.it h4{font-size:12px}.it p{font-size:11px;color:var(--mu);margin-top:2px}
+.ad{display:none;margin-top:10px;padding:11px;border:1px solid #1d3954;border-radius:11px;background:#0a1b2b;font-size:12px;line-height:1.7;color:var(--mu)}.ad b{color:var(--tx)}
+.fm{display:grid;gap:9px}.r2{display:grid;grid-template-columns:1fr 1fr;gap:9px}.res{display:none;margin-top:4px;padding:11px;background:#0a1e31;border:1px solid #1b3b59;border-radius:10px}
+.em{padding:22px;text-align:center;color:var(--mu);display:none}
+@media(max-width:960px){.app{grid-template-columns:1fr}aside{position:static;height:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border:0;border-bottom:1px solid var(--ln)}.brand{margin:0}nav{display:flex;flex-wrap:wrap}.eng{position:static;margin-left:auto}.kp{grid-template-columns:1fr 1fr}.g2,.g3{grid-template-columns:1fr}main{padding:16px}}
+@media(max-width:560px){.kp{grid-template-columns:1fr}.tools,.r2{grid-template-columns:1fr}}
+</style></head><body><div class="app">
+<aside><div class="brand"><div class="logo">FS</div><div><b>FraudShield AI</b><small>Real-Time Financial Fraud Intelligence</small></div></div>
+<nav id="nav"><button class="on" data-s="top">▦ Dashboard</button><button data-s="tx">⌁ Live Transactions</button><button data-s="rings">◉ Fraud Rings</button><button data-s="accs">◎ Accounts</button><button data-s="risk">◇ Risk Intelligence</button></nav>
+<div class="eng"><span class="dot" id="ed"></span><span id="et">Detection Engine Online</span><br>Latency: <b id="lat">42</b> ms</div></aside>
+<main id="top"><div class="top"><div><h1>Real-Time Financial Fraud Intelligence</h1><p>Graph-Based Anomaly Detection &amp; Explainable Risk Intelligence</p></div>
+<div class="acts"><div class="live"><span class="dot" id="ld"></span><span id="ll">LIVE MONITORING</span></div><button class="btn" id="bp">Pause Stream</button><button class="btn" id="br" disabled>Resume Stream</button><button class="btn d" id="bi">Inject Suspicious Event</button></div></div>
+<div class="q"><s>Traditional systems ask:</s> “Is this transaction suspicious?” <b>→ FraudShield asks:</b> “Is this transaction part of a suspicious network?”</div>
+<div class="kp"><div class="card kc" data-f="all"><div class="l">Transactions Analyzed</div><div class="v" id="k1"></div><div class="s" style="color:var(--cy)">+1,248 in the last hour</div></div>
+<div class="card kc" data-f="high"><div class="l">High-Risk Transactions</div><div class="v" id="k2" style="color:var(--crit)"></div><div class="s">Click to filter the monitor</div></div>
+<div class="card kc" data-s="accs"><div class="l">Suspicious Accounts</div><div class="v" id="k3" style="color:var(--amb)"></div><div class="s" id="k3s"></div></div>
+<div class="card kc" data-s="rings"><div class="l">Fraud Rings Detected</div><div class="v" id="k4" style="color:var(--crit)"></div><div class="s" id="k4s" style="color:var(--grn)"></div></div></div>
+<section class="g2"><div class="card" id="tx"><h3>Live Transaction Monitor <span id="ut">Updated just now</span></h3>
+<div class="tools"><input id="se" placeholder="Search transaction or account…" aria-label="Search"><select id="fl" aria-label="Risk filter"><option value="all">All risk levels</option><option value="critical">Critical only</option><option value="high">High + Critical</option><option value="medium">Medium</option><option value="low">Low risk</option></select><select id="so" aria-label="Sort"><option value="t">Newest first</option><option value="r">Highest risk</option><option value="a">Highest amount</option></select></div>
+<div class="tw"><table><thead><tr><th>Transaction</th><th>Account</th><th>Amount</th><th>Risk</th><th>Level</th><th>Action</th></tr></thead><tbody id="tb"></tbody></table><div class="em" id="em">No transactions match this filter.</div></div></div>
+<div class="card" id="risk"><h3>Explainable Risk Analysis <span id="sl"></span></h3><div id="rp"></div></div></section>
+<section class="g2" id="rings"><div class="card"><h3>Fraud Ring Connection Graph <span id="gt"></span></h3><div class="net"><svg id="gs" viewBox="0 0 700 350"></svg></div><div class="info" id="ni"><span>Click any node to inspect it.</span></div>
+<div class="lg"><span><i style="background:var(--bl)"></i>Account</span><span><i style="background:var(--amb)"></i>Device</span><span><i style="background:var(--pu)"></i>IP address</span><span><i style="background:var(--grn)"></i>Merchant</span><span><i style="background:var(--crit)"></i>Destination account</span><span><i style="background:var(--crit);border-radius:0;height:2px;width:14px"></i>High-risk link</span></div></div>
+<div class="card" id="accs"><h3>Account Risk Intelligence <span>Click an account</span></h3><div id="al"></div><div class="ad" id="ad"></div></div></section>
+<section class="g3"><div class="card"><h3>Detected Fraud Rings <span>Click to visualize</span></h3><div id="rl"></div></div>
+<div class="card"><h3>Test a Transaction <span>Demo simulator</span></h3><form class="fm" id="fm"><div class="r2"><input id="fa" value="ACC-105" aria-label="Account ID" required><input id="fv" type="number" min="1" max="1000000" value="4950" aria-label="Amount" required></div>
+<div class="r2"><select id="fd"><option value="safe">Known personal device</option><option value="new">New unknown device</option><option value="shared">Shared suspicious device</option></select><select id="fx"><option value="safe">Normal destination</option><option value="new">New destination</option><option value="fraud">Known fraud-ring destination</option></select></div>
+<div class="r2"><select id="fe"><option value="n">Normal velocity</option><option value="f">5 transactions in 10 minutes</option></select><select id="fo"><option value="n">Usual location</option><option value="o">Unusual location</option></select></div>
+<button class="btn" type="submit">Analyze Transaction</button><div class="res" id="rr" aria-live="polite"></div></form></div></section></main></div>
+<script>
+// ===== simulated world (seeded) =====
+let sd=7;const rnd=()=>(sd=sd*16807%2147483647)/2147483647,pick=a=>a[Math.floor(rnd()*a.length)];
+const $=id=>document.getElementById(id),fmt=n=>'₹'+Math.round(n).toLocaleString('en-IN'),MIN=6e4;
+const lvl=s=>s>=85?['CRITICAL','c','HOLD + MANUAL REVIEW']:s>=70?['HIGH','h','MANUAL REVIEW']:s>=40?['MEDIUM','m','STEP-UP VERIFICATION']:['LOW','l','ALLOW'];
+const col=s=>s>=85?'var(--crit)':s>=70?'var(--hi)':s>=40?'var(--amb)':'var(--grn)';
+const UNUSUAL=new Set(['MER-77','MER-22','MER-88','MER-91']),TRUSTED=['MER-01','MER-02','MER-03','MER-04','MER-05','MER-06'],ACC={};
+const mk=(id,avg)=>ACC[id]={id,avg,dev:'DEV-'+id.slice(4),ip:'IP-'+id.slice(4),dests:new Set(['DEST-'+id])};
+for(let i=401;i<=450;i++)mk('ACC-'+i,400+rnd()*5000);
+[['034',1600],['105',4500],['218',21800],['091',900],['092',1000],['093',850],['094',1100],['095',950],['301',1800],['302',2100],['303',1500],['304',1900],['511',1400],['512',1700],['513',1300]].forEach(([i,a])=>mk('ACC-'+i,a));
+const mkTx=(acct,amount,o={})=>{const a=ACC[acct];return{acct,amount,t:o.t??Date.now(),dev:o.dev||a.dev,ip:o.ip||a.ip,dest:o.dest??null,mer:o.mer||pick(TRUSTED),loc:o.loc||'home',vel:!!o.vel,truth:!!o.truth}};
+let T=[],c=12800,total=12846,paused=false,M,R=[],AS={},sel=null,ringId='FR-003',newId=null;
+// ===== graph + behaviour scoring engine =====
+function score(x){const a=ACC[x.acct],ev=[],P=(t,d,p)=>ev.push([t,d,p]);
+ const nd=M.dev[x.dev].size,ni=M.ip[x.ip].size,nx=x.dest?M.dest[x.dest].size:0,um=UNUSUAL.has(x.mer),near=y=>Math.abs(y.t-x.t)<45*MIN;
+ if(nd>1)P('Shared device across accounts',`${nd} accounts use ${x.dev}`,Math.min(28,6*nd-5));
+ if(nx>=3)P('Common destination account',`${nx} accounts transferred to ${x.dest}`,Math.min(24,Math.round(4.4*nx)));
+ const pe=new Set(),ts=[x.t];T.forEach(y=>{if(y.acct!=x.acct&&near(y)&&((nd>1&&y.dev==x.dev)||(ni>1&&y.ip==x.ip)||(nx>=3&&y.dest==x.dest)||(um&&y.mer==x.mer))){pe.add(y.acct);ts.push(y.t)}});
+ const k=pe.size+1;if(k>=3)P('Coordinated transaction timing',`${k} linked accounts transacted within ${Math.max(1,Math.round((Math.max(...ts)-Math.min(...ts))/MIN))} min`,Math.min(14,4+3*k));
+ if(ni>1)P('Shared IP address',`${ni} accounts seen on ${x.ip}`,Math.min(14,Math.round(2.4*ni)));
+ if(um){const s=new Set();T.forEach(y=>{if(y.mer==x.mer&&near(y))s.add(y.acct)});s.size>=3?P('Synchronized purchase sequence',`${s.size} accounts bought at unusual merchant ${x.mer} in the same window`,18):P('Unusual merchant',`${x.mer} is rarely used by this customer segment`,6)}
+ if(nd==1&&x.dev!=a.dev)P('New device',`${x.dev} never seen for ${x.acct}`,10);
+ if(x.dest&&nx<3&&!a.dests.has(x.dest))P('New destination',`First transfer to ${x.dest}`,8);
+ if(x.loc=='odd')P('Unusual location',"Differs from this account's usual location",9);
+ if(x.vel||T.filter(y=>y.acct==x.acct&&Math.abs(y.t-x.t)<10*MIN).length>=4)P('High transaction velocity','Burst of transactions within 10 minutes',12);
+ const r=x.amount/a.avg;if(r>1.5)P('Behaviour anomaly',`${r.toFixed(1)}x this account's 30-day average`,Math.min(8,Math.round((r-1)*1.6)));
+ if(x.amount>25000)P('High absolute value',`${fmt(x.amount)} is large, but value alone is a weak signal`,20);
+ const pos=ev.reduce((s,e)=>s+e[2],0);
+ if(pos<15)P('Natural variation vs. baseline','Minor deviation from account history',3+Math.min(6,Math.round(Math.abs(Math.log(r))*3)));
+ if(pos<40){if(x.dev==a.dev)P('Known personal device','No added risk',0);if(x.loc!='odd')P('Usual location','No added risk',0);if(!um)P('Trusted merchant','No added risk',0);if(!ev.some(e=>/device|IP|destination|timing|sequence/i.test(e[0])))P('No suspicious graph relationships','Not linked to any flagged cluster',0)}
+ ev.sort((p,q)=>q[2]-p[2]);x.ev=ev;x.score=Math.max(2,Math.min(99,ev.reduce((s,e)=>s+e[2],0)))}
+function run(){M={dev:{},ip:{},dest:{},mer:{}};
+ T.forEach(x=>[['dev',x.dev],['ip',x.ip],['dest',x.dest],['mer',UNUSUAL.has(x.mer)?x.mer:null]].forEach(([k,v])=>{if(v)(M[k][v]??=new Set()).add(x.acct)}));
+ T.forEach(score);
+ const par={},f=a=>par[a]===a?a:(par[a]=f(par[a])),link=s=>{const l=[...s];l.slice(1).forEach(b=>par[f(b)]=f(l[0]))};
+ T.forEach(x=>par[x.acct]=par[x.acct]||x.acct);for(const k in M)for(const v in M[k])if(M[k][v].size>=3)link(M[k][v]);
+ const g={};Object.keys(par).forEach(a=>(g[f(a)]??=[]).push(a));
+ R=Object.values(g).filter(m=>m.length>=3).map(m=>{m.sort();const S=new Set(m),sh=k=>Object.keys(M[k]).filter(v=>M[k][v].size>=3&&[...M[k][v]].some(a=>S.has(a))),dv=sh('dev'),ip=sh('ip'),de=sh('dest'),me=sh('mer');
+  return{id:m.includes('ACC-091')?'FR-003':m.includes('ACC-301')?'FR-002':m.includes('ACC-511')?'FR-001':'FR-9'+m[0].slice(4),members:m,
+   name:de.length?'Coordinated Transfer Ring':me.length&&!dv.length?'Merchant Collusion Pattern':'Device Sharing Cluster',
+   pattern:[dv.length&&'Shared Device',ip.length&&'Shared IP',de.length&&'Common Destination',me.length&&'Synchronized Merchant Sequence'].filter(Boolean).join(' + ')}});
+ const rm={};R.forEach(r=>r.members.forEach(a=>rm[a]=r));AS={};
+ Object.keys(ACC).forEach(id=>{const t=T.filter(x=>x.acct==id);if(!t.length)return;const mx=Math.max(...t.map(x=>x.score)),av=t.reduce((s,x)=>s+x.score,0)/t.length,r=rm[id];AS[id]={id,ring:r&&r.id,score:Math.round(r?mx*.97:.5*mx+.5*av),hi:t.filter(x=>x.score>=70).length,n:t.length}});
+ R.forEach(r=>r.risk=Math.round(r.members.reduce((s,a)=>s+AS[a].score,0)/r.members.length));R.sort((a,b)=>b.risk-a.risk)}
+function add(x){x.id='TX-'+(++c);T.push(x);total++;if(T.length>160){const i=T.findIndex(y=>!y.truth&&y.acct!='ACC-218');if(i>=0)T.splice(i,1)}run();return x}
+// seed data
+const N0=Date.now(),ids=Object.keys(ACC).filter(i=>+i.slice(4)>=400).concat(['ACC-034','ACC-105']),S=[];
+for(let i=0;i<46;i++){const id=pick(ids);S.push(mkTx(id,ACC[id].avg*Math.exp((rnd()-.5)*.7),{t:N0-(2+rnd()*55)*MIN}))}
+for(let i=0;i<5;i++)S.push(mkTx('ACC-218',21800*Math.exp((rnd()-.5)*.3),{t:N0-(60+i*50)*MIN}));
+S.push(mkTx('ACC-218',48000,{t:N0-20e3}));
+['091','092','093','094','095'].forEach((s,i)=>S.push(mkTx('ACC-'+s,4650+rnd()*500,{t:N0-(30+i*50)*1e3,dev:'DEVICE-X17',ip:'IP-99',dest:'ACC-999',mer:i%2?'MER-22':'MER-77',truth:1})));
+[301,302,303,304].forEach((s,i)=>[['MER-88',0],['MER-91',9e4]].forEach(([m,dt])=>S.push(mkTx('ACC-'+s,ACC['ACC-'+s].avg*5,{t:N0-(8+i*.7)*MIN+dt,dev:'DEV-NEW-'+s,dest:'DEST-NEW-'+s,mer:m,loc:'odd',truth:1}))));
+[511,512,513].forEach((s,i)=>S.push(mkTx('ACC-'+s,ACC['ACC-'+s].avg*3,{t:N0-(12+i)*MIN,dev:'DEVICE-09',ip:'IP-12',dest:'DEST-NEW-'+s,loc:'odd',truth:1})));
+S.sort((a,b)=>a.t-b.t).forEach(x=>{x.id='TX-'+(++c);T.push(x)});run();total=12846;sel=T.find(x=>x.acct=='ACC-091'&&x.mer=='MER-77')||T[0];
+// ===== data access layer: set API.base to a FastAPI URL to replace local data =====
+const API={base:null,
+ async get(p,loc){if(this.base){try{return await (await fetch(this.base+p)).json()}catch(e){}}return loc()},
+ dashboard(){return this.get('/dashboard',()=>{const fl=T.filter(x=>x.score>=70),lab=fl.filter(x=>x.truth).length;return{total,high:fl.length,sus:Object.values(AS).filter(a=>a.score>=40).length,rings:R.length,prec:fl.length?Math.round(100*lab/fl.length):100}})},
+ transactions(){return this.get('/transactions',()=>T)},rings(){return this.get('/rings',()=>R)},
+ account(id){return this.get('/accounts/'+id,()=>({...AS[id],avg:ACC[id].avg,shared:[...new Set(T.filter(x=>x.acct==id).flatMap(x=>[['dev',x.dev],['ip',x.ip],['dest',x.dest]].filter(([k,v])=>v&&M[k][v].size>=3).map(([k,v])=>`${v} (${M[k][v].size} accounts)`)))]}))},
+ ringGraph(id){return this.get(`/rings/${id}/graph`,()=>graphOf(id))},
+ async score(p){if(this.base){try{return await (await fetch(this.base+'/score-transaction',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)})).json()}catch(e){}}
+  if(!ACC[p.acct])mk(p.acct,3000);const a=ACC[p.acct];return add(mkTx(p.acct,p.amount,{dev:p.device=='new'?'DEV-NEW-'+Math.floor(rnd()*900):p.device=='shared'?'DEVICE-X17':a.dev,ip:p.device=='shared'?'IP-99':a.ip,dest:p.dest=='fraud'?'ACC-999':p.dest=='new'?'DEST-NEW-'+Math.floor(rnd()*900):'DEST-'+a.id,loc:p.loc=='o'?'odd':'home',vel:p.vel=='f',truth:p.device=='shared'||p.dest=='fraud'}))}};
+function graphOf(id){const r=R.find(q=>q.id==id);if(!r)return null;const Sm=new Set(r.members),nodes={},seen=new Set(),ed=[],node=(i,t)=>nodes[i]??={id:i,type:t};
+ T.filter(x=>Sm.has(x.acct)).forEach(x=>{node(x.acct,'acct');[[x.dev,'dev'],[x.ip,'ip'],[x.dest,'dest'],[UNUSUAL.has(x.mer)?x.mer:null,'mer']].forEach(([e,t])=>{if(!e||M[t][e].size<2)return;node(e,t);const k=x.acct+'|'+e;if(!seen.has(k)){seen.add(k);ed.push([x.acct,e,t!='mer'])}})});
+ const cl={acct:[],dev:[],ip:[],mer:[],dest:[]},X={acct:70,dev:250,ip:250,mer:440,dest:630};Object.values(nodes).forEach(n=>cl[n.type].push(n));
+ [cl.acct,[...cl.dev,...cl.ip],cl.mer,cl.dest].forEach(c=>c.forEach((n,i)=>{n.y=22+(i+.5)*(306/c.length);n.x=X[n.type]}));return{ring:r,nodes:Object.values(nodes),edges:ed}}
+// ===== UI =====
+const pill=s=>`<b style="color:${col(s)}">${s}</b><div class="rb"><i style="width:${s}%;background:${col(s)}"></i></div>`;
+async function render(){const [k,tx,rg]=await Promise.all([API.dashboard(),API.transactions(),API.rings()]);
+ $('k1').textContent=k.total.toLocaleString('en-IN');$('k2').textContent=k.high;$('k3').textContent=k.sus;$('k3s').textContent=`Across ${k.rings} connected clusters`;$('k4').textContent=k.rings;$('k4s').textContent=`${k.prec}% precision (labeled demo data)`;
+ const q=$('se').value.trim().toLowerCase(),f=$('fl').value,so=$('so').value;
+ let L=tx.filter(x=>(!q||x.id.toLowerCase().includes(q)||x.acct.toLowerCase().includes(q))&&(f=='all'||(f=='critical'&&x.score>=85)||(f=='high'&&x.score>=70)||(f=='medium'&&x.score>=40&&x.score<70)||(f=='low'&&x.score<40)));
+ L.sort((a,b)=>so=='r'?b.score-a.score:so=='a'?b.amount-a.amount:b.t-a.t);$('em').style.display=L.length?'none':'block';
+ $('tb').innerHTML=L.slice(0,40).map(x=>{const l=lvl(x.score);return`<tr tabindex="0" data-x="${x.id}" class="${sel&&sel.id==x.id?'sel':''} ${x.id==newId?'new':''}"><td>${x.id}</td><td>${x.acct}</td><td>${fmt(x.amount)}</td><td>${pill(x.score)}</td><td><span class="b ${l[1]}">${l[0]}</span></td><td>${l[2]}</td></tr>`}).join('');
+ renderRisk();$('rl').innerHTML=rg.map(r=>`<div class="it ${r.id==ringId?'on':''}" data-r="${r.id}"><div><h4>${r.id} • ${r.name}</h4><p>${r.members.length} accounts • ${r.pattern}</p></div><span class="b ${lvl(r.risk)[1]}">${r.risk} / 100</span></div>`).join('');
+ if(!rg.find(r=>r.id==ringId))ringId=rg[0]&&rg[0].id;const rr=rg.find(r=>r.id==ringId);
+ $('al').innerHTML=(rr?rr.members.slice(0,5):[]).concat(['ACC-218']).filter((v,i,a)=>a.indexOf(v)==i).map(id=>AS[id]).filter(Boolean).map(a=>`<div class="it" data-a="${a.id}"><div><h4>${a.id}</h4><p>${a.hi} high-risk transaction(s) • ${a.ring?'Ring '+a.ring:'No ring membership'}</p></div><b style="color:${col(a.score)};font-size:17px">${a.score}</b></div>`).join('');
+ drawGraph()}
+function renderRisk(){const x=sel;if(!x)return;const l=lvl(x.score),cl=x.score>=70?'':x.score>=40?'md':'ok';$('sl').textContent=x.id+' • '+x.acct;
+ $('rp').innerHTML=`<div class="sb"><div><div style="color:var(--mu);font-size:11px;margin-bottom:5px">Transaction Risk Score · ${fmt(x.amount)}</div><span class="b ${l[1]}">${l[0]} RISK</span></div><div class="big" style="color:${col(x.score)}">${x.score}<small style="font-size:12px;color:var(--mu)">/100</small></div></div>
+ ${x.ev.map(e=>`<div class="rs"><div><b>${e[0]}</b><p>${e[1]}</p></div><em style="color:${e[2]>0?'#ff8891':'var(--grn)'}">${e[2]>0?'+':''}${e[2]}</em></div>`).join('')}
+ <div class="act ${cl}"><b style="color:${col(x.score)}">Recommended Action: ${l[2]}</b><p>${x.score>=70?'Strongly linked to a coordinated cluster. Hold the transfer and investigate the linked accounts together.':x.score>=40?'Some anomalies present. Request additional verification and monitor the account.':'No coordinated fraud pattern. High value alone is not treated as fraud.'}</p></div>`}
+async function drawGraph(){const g=await API.ringGraph(ringId),sv=$('gs');if(!g){sv.innerHTML='';$('gt').textContent='No rings detected';return}
+ $('gt').textContent=`Ring ${g.ring.id} • Risk ${g.ring.risk}/100`;const nm={};g.nodes.forEach(n=>nm[n.id]=n);
+ const C={acct:['#172a43','#6aa8ff'],dev:['#2a2318','#ffc857'],ip:['#241d3a','#b08cff'],mer:['#122d2a','#38e6a0'],dest:['#2c1620','#ff4d5e']};
+ sv.innerHTML=g.edges.map(([a,b,h])=>`<line class="ed ${h?'hot':''}" x1="${nm[a].x}" y1="${nm[a].y}" x2="${nm[b].x}" y2="${nm[b].y}"/>`).join('')+
+ g.nodes.map(n=>`<g class="node" tabindex="0" data-n="${n.id}" data-t="${n.type}"><circle cx="${n.x}" cy="${n.y}" r="${n.type=='acct'?19:23}" fill="${C[n.type][0]}" stroke="${C[n.type][1]}"/><text class="nl" x="${n.x}" y="${n.y+3}" text-anchor="middle">${n.type=='acct'?n.id.slice(4):n.id.length>9?n.id.slice(0,9):n.id}</text>${n.type!='acct'?`<text class="nl" x="${n.x}" y="${n.y+37}" text-anchor="middle" style="fill:#8da4bf">${n.id}</text>`:''}</g>`).join('')}
+function nodeInfo(id,t){const n=M[t]&&M[t][id]?M[t][id].size:0;const D={dev:['Shared Device',`Used by ${n} linked accounts.`],ip:['Shared IP Address',`Seen across ${n} linked accounts.`],dest:['Common Destination',`Receives transfers from ${n} suspicious accounts.`],mer:['Unusual Merchant',`${n} linked accounts bought here in the same window.`]};
+ $('ni').innerHTML=t=='acct'?`<b>${id}</b> • Account<br><span>Account intelligence opened on the right.</span>`:`<b>${id}</b> • ${D[t][0]}<br><span>${D[t][1]}</span>`}
+async function showAcct(id){const a=await API.account(id);if(!a)return;const d=$('ad');d.style.display='block';const act=a.score>=70?'Investigate account together with connected entities':a.score>=40?'Step-up verification and monitor':'Allow: behaviour consistent, no ring membership';
+ d.innerHTML=`<b style="font-size:13px">${a.id} • Account Risk ${a.score}/100</b><br>Fraud ring: <b>${a.ring||'None'}</b><br>High-risk transactions: <b>${a.hi}</b> of ${a.n}<br>Typical spend: <b>${fmt(a.avg)}</b><br>Shared infrastructure: <b>${a.shared.length?a.shared.join(', '):'None'}</b><br>Recommended action: <b style="color:${col(a.score)}">${act}</b>`}
+// ===== events =====
+const stamp=()=>{$('ut').textContent='Updated '+new Date().toLocaleTimeString();$('lat').textContent=35+Math.floor(rnd()*25)};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-x],[data-r],[data-a],[data-n],[data-f],[data-s]');if(!t)return;const d=t.dataset;
+ if(d.x){sel=T.find(x=>x.id==d.x);render()}else if(d.r){ringId=d.r;render()}else if(d.a)showAcct(d.a);
+ else if(d.n){document.querySelectorAll('.node').forEach(n=>n.classList.toggle('on',n==t));nodeInfo(d.n,d.t);if(d.t=='acct')showAcct(d.n)}
+ else if(d.f){$('fl').value=d.f;render();$('tx').scrollIntoView()}else if(d.s){$(d.s).scrollIntoView();document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.s==d.s))}});
+document.addEventListener('keydown',e=>{if((e.key=='Enter'||e.key==' ')&&e.target.matches('tr[data-x],.node')){e.preventDefault();e.target.dispatchEvent(new MouseEvent('click',{bubbles:true}))}});
+['se','fl','so'].forEach(i=>$(i).addEventListener(i=='se'?'input':'change',render));
+function pz(v){paused=v;$('bp').disabled=v;$('br').disabled=!v;$('ll').textContent=v?'MONITORING PAUSED':'LIVE MONITORING';$('et').textContent=v?'Detection Stream Paused':'Detection Engine Online';$('ld').classList.toggle('pz',v);$('ed').classList.toggle('pz',v)}
+$('bp').onclick=()=>pz(true);$('br').onclick=()=>pz(false);
+$('bi').onclick=()=>{const x=add(mkTx(pick(['ACC-091','ACC-092','ACC-093','ACC-094']),4900+rnd()*200,{dev:'DEVICE-X17',ip:'IP-99',dest:'ACC-999',mer:'MER-77',truth:1}));sel=x;newId=x.id;$('so').value='t';$('fl').value='all';stamp();render();$('tx').scrollIntoView()};
+$('fm').onsubmit=async e=>{e.preventDefault();const x=await API.score({acct:$('fa').value.trim().toUpperCase(),amount:Math.max(1,Math.min(1e6,+$('fv').value||1)),device:$('fd').value,dest:$('fx').value,vel:$('fe').value,loc:$('fo').value});sel=x;newId=x.id;const l=lvl(x.score),r=$('rr');r.style.display='block';
+ r.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><b>${x.id} • ${x.acct}</b><b style="font-size:22px;color:${col(x.score)}">${x.score}/100</b></div><div style="font-weight:800;color:${col(x.score)};margin:4px 0">${l[0]} • ${l[2]}</div><div style="font-size:11px;color:var(--mu);line-height:1.7">${x.ev.filter(v=>v[2]!=0).map(v=>`• ${v[0]} (${v[2]>0?'+':''}${v[2]})`).join('<br>')||'• No anomalies detected'}</div>`;stamp();render()};
+setInterval(()=>{if(paused)return;const id=pick(ids);add(mkTx(id,ACC[id].avg*Math.exp((rnd()-.5)*.8)));newId=null;stamp();render()},5000);
+render();
+</script></body></html>
