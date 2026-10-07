@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FraudShield AI | Interactive Financial Fraud Intelligence</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#07111f;--panel:#0c192b;--panel2:#102238;--line:#1e3550;
+      --text:#eaf2ff;--muted:#8da4bf;--cyan:#4dd8ff;--green:#38e6a0;
+      --amber:#ffc857;--red:#ff5f6d;--blue:#6aa8ff;--purple:#9c7bff
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(50,123,255,.12),transparent 32%),
+        radial-gradient(circle at 90% 10%,rgba(77,216,255,.08),transparent 25%),
+        var(--bg);
+      color:var(--text);min-height:100vh
+    }
+    button,input,select{font:inherit}
+    button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+    .layout{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+    aside{
+      border-right:1px solid var(--line);background:rgba(7,17,31,.88);
+      backdrop-filter:blur(12px);padding:24px 18px;position:sticky;top:0;height:100vh
+    }
+    .brand{display:flex;gap:12px;align-items:center;margin-bottom:34px}
+    .logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,var(--cyan),var(--blue));color:#03101d;box-shadow:0 0 30px rgba(77,216,255,.25)}
+    .brand h2{font-size:18px}.brand span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+    nav{display:grid;gap:8px}
+    .nav{border:0;width:100%;text-align:left;padding:12px 14px;border-radius:10px;color:var(--muted);cursor:pointer;display:flex;gap:10px;align-items:center;font-size:14px;background:transparent}
+    .nav.active,.nav:hover{background:#12253d;color:white}
+    .status{position:absolute;bottom:22px;left:18px;right:18px;border:1px solid #1e4b45;background:#0b2928;border-radius:12px;padding:12px;font-size:12px;color:#a7f4d8}
+    .dot{width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block;margin-right:7px;box-shadow:0 0 12px var(--green)}
+    .dot.paused{background:var(--amber);box-shadow:0 0 12px var(--amber)}
+    main{padding:26px 30px 60px;overflow:hidden}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
+    .topbar h1{font-size:26px}.topbar p{color:var(--muted);font-size:13px;margin-top:5px}
+    .top-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+    .live{border:1px solid #224762;background:#0e2235;padding:9px 13px;border-radius:999px;font-size:12px;color:#bdeeff}
+    .btn{border:1px solid #245878;background:#12344f;color:#c6edff;padding:9px 12px;border-radius:9px;font-size:11px;cursor:pointer}
+    .btn:hover{background:#194763}.btn.secondary{background:#0b1c2d;border-color:#1c3853}.btn.danger{background:#381820;border-color:#68303b;color:#ffadb3}
+    .toolbar{display:grid;grid-template-columns:1fr 180px 160px;gap:10px;margin-bottom:16px}
+    input,select{width:100%;background:#091827;border:1px solid #1e3852;color:white;padding:10px;border-radius:9px;outline:none;font-size:12px}
+    .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+    .card{background:linear-gradient(180deg,rgba(18,38,61,.95),rgba(11,27,45,.95));border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:0 14px 45px rgba(0,0,0,.18)}
+    .metric-card{cursor:pointer;transition:.18s ease}
+    .metric-card:hover{transform:translateY(-2px);border-color:#31567a}
+    .label{font-size:12px;color:var(--muted);margin-bottom:10px}
+    .metric{font-size:28px;font-weight:800;letter-spacing:-.7px}.metric small{font-size:12px;font-weight:500;color:var(--muted)}
+    .trend{font-size:11px;margin-top:7px;color:#7d93ad}.good{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}.cyan{color:var(--cyan)}
+    .grid2{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-bottom:16px}
+    .bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}
+    .section-title h3{font-size:15px}.section-title span{font-size:11px;color:var(--muted)}
+    .table-wrap{overflow:auto;max-height:330px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:11px 9px;text-align:left;border-bottom:1px solid #19304a;font-size:12px;white-space:nowrap}
+    th{color:#7891ad;font-weight:600;position:sticky;top:0;background:#102238;z-index:1}
+    td{color:#d7e5f6}
+    tbody tr{cursor:pointer}
+    tbody tr:hover{background:rgba(255,255,255,.025)}
+    tbody tr.selected{background:rgba(77,216,255,.08);box-shadow:inset 3px 0 var(--cyan)}
+    .badge{font-size:10px;font-weight:800;padding:5px 8px;border-radius:999px;display:inline-block}
+    .low{background:#10372e;color:#6df0bd}.medium{background:#3a3217;color:#ffd46b}.high{background:#3b2228;color:#ff9b9f}.critical{background:#4a1820;color:#ff6b76}
+    .riskbar{height:6px;background:#172c45;border-radius:10px;overflow:hidden;margin-top:6px;width:86px}.riskbar div{height:100%;border-radius:10px}
+    .riskpanel{display:grid;gap:12px}
+    .scorebox{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px;background:#0a2035;border:1px solid #1d405f;border-radius:12px}
+    .bigscore{font-size:36px;font-weight:900;color:var(--red)}
+    .reason{display:grid;grid-template-columns:1fr auto;gap:12px;padding:11px 12px;border-radius:10px;background:#0d1d30;border:1px solid #19324e;font-size:12px}
+    .reason b{display:block;margin-bottom:3px}.reason p{color:var(--muted);font-size:10px}.points{font-weight:800;color:#ff8891}
+    .action{border:1px solid #63303a;background:linear-gradient(135deg,#34161e,#24131b);padding:14px;border-radius:12px}
+    .action strong{color:#ff7b85}.action p{font-size:11px;color:#c9a6aa;margin-top:5px;line-height:1.55}
+    .network{position:relative;height:340px;overflow:hidden;border:1px solid #193755;border-radius:13px;background:linear-gradient(rgba(41,77,109,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(41,77,109,.08) 1px,transparent 1px),#081725;background-size:26px 26px}
+    svg{width:100%;height:100%}.edge{stroke:#315576;stroke-width:1.5}.edge.hot{stroke:#ff6874;stroke-width:2.3;filter:drop-shadow(0 0 4px #ff6874)}
+    .node{cursor:pointer}.node circle{stroke-width:2;transition:.16s}.node:hover circle,.node.selected circle{stroke-width:4;filter:drop-shadow(0 0 8px rgba(255,255,255,.25))}
+    .node-label{fill:#dcecff;font-size:10px;font-weight:700;pointer-events:none}
+    .graph-tooltip{position:absolute;left:12px;bottom:12px;background:#07131fdd;border:1px solid #254562;border-radius:9px;padding:9px 11px;font-size:11px;color:#cfe1f5;max-width:260px}
+    .legend{display:flex;gap:13px;flex-wrap:wrap;margin-top:12px;color:var(--muted);font-size:10px}.lg{display:flex;align-items:center;gap:5px}.lg i{width:8px;height:8px;border-radius:50%;display:block}
+    .ring{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px;border:1px solid #1a334e;background:#0c1c2d;border-radius:11px;margin-top:9px;cursor:pointer}
+    .ring:hover,.ring.active{border-color:#37658d;background:#10253b}.ring h4{font-size:12px}.ring p{font-size:10px;color:var(--muted);margin-top:4px}.ring-score{font-weight:900;color:var(--red)}
+    .scanbox{display:grid;gap:11px}.input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .scan-result{margin-top:3px;background:#0a1e31;border:1px solid #1b3b59;border-radius:11px;padding:12px;font-size:12px;color:#bad0e7;display:none}
+    .account-detail{margin-top:14px;padding:13px;border:1px solid #1d3954;border-radius:12px;background:#0a1b2b;display:none}
+    .account-detail h4{font-size:13px;margin-bottom:7px}.account-detail p{font-size:11px;color:var(--muted);line-height:1.6}
+    .toast{position:fixed;right:18px;bottom:18px;max-width:330px;background:#0c2033;border:1px solid #2b587a;border-radius:11px;padding:12px 14px;color:#dcecff;font-size:12px;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s;z-index:50}
+    .toast.show{opacity:1;transform:none}
+    .empty{padding:24px;text-align:center;color:var(--muted);font-size:12px}
+    footer{text-align:center;color:#597089;font-size:10px;margin-top:22px}
+    @media(max-width:1000px){.layout{grid-template-columns:1fr}aside{display:none}.cards{grid-template-columns:repeat(2,1fr)}.grid2,.bottom{grid-template-columns:1fr}main{padding:20px}.toolbar{grid-template-columns:1fr 1fr}}
+    @media(max-width:600px){.cards{grid-template-columns:1fr}.input-row,.toolbar{grid-template-columns:1fr}.topbar{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <div class="brand">
+      <div class="logo">FS</div>
+      <div><h2>FraudShield AI</h2><span>Financial Intelligence Engine</span></div>
+    </div>
+    <nav>
+      <button class="nav active" data-target="dashboard">▦ Dashboard</button>
+      <button class="nav" data-target="transactions">⌁ Live Transactions</button>
+      <button class="nav" data-target="rings">◉ Fraud Rings</button>
+      <button class="nav" data-target="accounts">◎ Accounts</button>
+      <button class="nav" data-target="risk">◇ Risk Intelligence</button>
+    </nav>
+    <div class="status" id="engineStatus"><span class="dot"></span><span id="engineText">Detection Engine Online</span><br><span style="color:#6b918e;margin-left:15px">Latency: <span id="latency">42</span> ms</span></div>
+  </aside>
+
+  <main id="dashboard">
+    <div class="topbar">
+      <div>
+        <h1>Real-Time Financial Fraud Intelligence</h1>
+        <p>Graph-based anomaly detection and explainable risk intelligence</p>
+      </div>
+      <div class="top-actions">
+        <div class="live"><span class="dot" id="liveDot"></span><span id="liveLabel">LIVE MONITORING</span></div>
+        <button class="btn secondary" id="pauseBtn" type="button">Pause stream</button>
+        <button class="btn" id="injectBtn" type="button">Inject suspicious event</button>
+      </div>
+    </div>
+
+    <div class="toolbar" id="transactions">
+      <input id="searchInput" aria-label="Search transactions" placeholder="Search transaction or account…" />
+      <select id="riskFilter" aria-label="Filter by risk">
+        <option value="all">All risk levels</option>
+        <option value="critical">Critical only</option>
+        <option value="high">High + Critical</option>
+        <option value="low">Low risk</option>
+      </select>
+      <select id="sortSelect" aria-label="Sort transactions">
+        <option value="latest">Newest first</option>
+        <option value="risk">Highest risk</option>
+        <option value="amount">Highest amount</option>
+      </select>
+    </div>
+
+    <section class="cards">
+      <div class="card metric-card" data-filter="all">
+        <div class="label">Transactions Analyzed</div><div class="metric" id="metricTransactions">12,846</div><div class="trend cyan" id="metricRate">+1,248 in the last hour</div>
+      </div>
+      <div class="card metric-card" data-filter="high">
+        <div class="label">High-Risk Transactions</div><div class="metric bad" id="metricHigh">43</div><div class="trend">Precision-focused alerting</div>
+      </div>
+      <div class="card metric-card" data-jump="accounts">
+        <div class="label">Suspicious Accounts</div><div class="metric warn">17</div><div class="trend">Across 3 connected clusters</div>
+      </div>
+      <div class="card metric-card" data-jump="rings">
+        <div class="label">Fraud Rings Detected</div><div class="metric bad">3</div><div class="trend good">96.4% precision</div>
+      </div>
+    </section>
+
+    <section class="grid2">
+      <div class="card">
+        <div class="section-title"><h3>Live Transaction Risk Monitor</h3><span id="updateTime">Updated just now</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Transaction</th><th>Account</th><th>Amount</th><th>Risk</th><th>Status</th></tr></thead>
+            <tbody id="transactionBody"></tbody>
+          </table>
+          <div class="empty" id="emptyState" style="display:none">No transactions match this filter.</div>
+        </div>
+      </div>
+
+      <div class="card" id="risk">
+        <div class="section-title"><h3>Explainable Risk Analysis</h3><span id="selectedTxLabel">Select a transaction</span></div>
+        <div class="riskpanel" id="riskPanel"></div>
+      </div>
+    </section>
+
+    <section class="grid2" id="rings">
+      <div class="card">
+        <div class="section-title"><h3>Fraud Ring Connection Graph</h3><span id="graphTitle">Ring #FR-003 • Risk 96/100</span></div>
+        <div class="network">
+          <svg viewBox="0 0 700 340" aria-label="Interactive fraud ring graph" id="graphSvg"></svg>
+          <div class="graph-tooltip" id="graphTooltip">Click a node to inspect its relationship.</div>
+        </div>
+        <div class="legend">
+          <span class="lg"><i style="background:#6aa8ff"></i>Account</span>
+          <span class="lg"><i style="background:#ffc857"></i>Device</span>
+          <span class="lg"><i style="background:#ff5f6d"></i>High-risk infrastructure / destination</span>
+          <span class="lg"><i style="background:#38e6a0"></i>Merchant</span>
+        </div>
+      </div>
+
+      <div class="card" id="accounts">
+        <div class="section-title"><h3>Account Risk Intelligence</h3><span>Click an account</span></div>
+        <div id="accountList"></div>
+        <div class="account-detail" id="accountDetail"></div>
+      </div>
+    </section>
+
+    <section class="bottom">
+      <div class="card">
+        <div class="section-title"><h3>Detected Fraud Rings</h3><span>Choose a ring to inspect</span></div>
+        <div id="ringList"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><h3>Test a Transaction</h3><span>Interactive demo simulator</span></div>
+        <form class="scanbox" id="scanForm">
+          <div class="input-row">
+            <input id="acc" value="ACC-105" placeholder="Account ID" required />
+            <input id="amt" value="4950" min="1" max="1000000" type="number" placeholder="Amount" required />
+          </div>
+          <div class="input-row">
+            <select id="device">
+              <option value="safe">Known personal device</option>
+              <option value="new">New unknown device</option>
+              <option value="shared">Shared suspicious device</option>
+            </select>
+            <select id="destination">
+              <option value="safe">Normal destination</option>
+              <option value="new">New destination</option>
+              <option value="fraud">Known fraud-ring destination</option>
+            </select>
+          </div>
+          <div class="input-row">
+            <select id="velocity">
+              <option value="normal">Normal transaction velocity</option>
+              <option value="fast">5 transactions in 10 minutes</option>
+            </select>
+            <select id="location">
+              <option value="normal">Usual location</option>
+              <option value="odd">Unusual location</option>
+            </select>
+          </div>
+          <button class="btn" type="submit">Analyze & add to live monitor</button>
+          <div class="scan-result" id="scanResult" aria-live="polite"></div>
+        </form>
+      </div>
+    </section>
+
+    <footer>FraudShield AI • HNX26PSI04 Real-Time Financial Fraud Intelligence • Interactive Hackathon Prototype</footer>
+  </main>
+</div>
+
+<div class="toast" id="toast" aria-live="polite"></div>
+
+<script>
+(() => {
+  const state = {
+    paused:false,
+    selectedId:"TX-12846",
+    ringId:"FR-003",
+    total:12846,
+    transactions:[
+      {id:"TX-12846",account:"ACC-091",amount:4950,risk:94,time:Date.now()-1000,reasons:[
+        ["Shared device across accounts","5 linked accounts use DEVICE-X17",25],
+        ["Common destination account","5 accounts transferred to ACC-999",22],
+        ["Coordinated transaction velocity","Transactions occurred within 4 minutes",18],
+        ["Shared network identity","Same IP observed across suspicious accounts",16],
+        ["Behaviour anomaly","Pattern differs from account history",13]
+      ]},
+      {id:"TX-12845",account:"ACC-092",amount:5120,risk:91,time:Date.now()-8000,reasons:[
+        ["Shared device across accounts","5 linked accounts use DEVICE-X17",25],
+        ["Common destination account","Transfer converges on ACC-999",22],
+        ["Synchronized purchase pattern","Sequence matches linked accounts",18],
+        ["Shared IP address","IP-99 reused across accounts",14],
+        ["Behaviour anomaly","Deviation from normal behaviour",12]
+      ]},
+      {id:"TX-12844",account:"ACC-218",amount:48000,risk:22,time:Date.now()-15000,reasons:[
+        ["High-value transaction","Amount is above account average",12],
+        ["Trusted device","Known personal device lowers concern",-5],
+        ["Normal network behaviour","No suspicious linked accounts",-7]
+      ]},
+      {id:"TX-12843",account:"ACC-093",amount:4820,risk:89,time:Date.now()-23000,reasons:[
+        ["Shared device across accounts","DEVICE-X17 connects multiple accounts",25],
+        ["Common destination","Destination linked to FR-003",22],
+        ["High velocity","Multiple transfers in a short window",18],
+        ["Shared IP","IP-99 appears across cluster",14],
+        ["Sequence similarity","Purchase order matches ring pattern",10]
+      ]},
+      {id:"TX-12842",account:"ACC-034",amount:1240,risk:11,time:Date.now()-35000,reasons:[
+        ["Normal behaviour","Amount, device and destination are familiar",0]
+      ]},
+      {id:"TX-12841",account:"ACC-094",amount:5010,risk:86,time:Date.now()-46000,reasons:[
+        ["Shared infrastructure","Device and IP overlap with FR-003",28],
+        ["Destination convergence","Funds route to ACC-999",22],
+        ["Temporal coordination","Transactions closely synchronized",18],
+        ["Merchant overlap","Same unusual merchant sequence",18]
+      ]}
+    ],
+    rings:[
+      {id:"FR-003",name:"Coordinated Transfer Ring",risk:96,members:["ACC-091","ACC-092","ACC-093","ACC-094","ACC-095"],desc:"shared device + IP + destination"},
+      {id:"FR-002",name:"Merchant Collusion Pattern",risk:82,members:["ACC-301","ACC-302","ACC-303","ACC-304"],desc:"synchronized purchase sequence"},
+      {id:"FR-001",name:"Device Sharing Cluster",risk:67,members:["ACC-511","ACC-512","ACC-513"],desc:"repeated device and IP reuse"}
+    ]
+  };
+
+  const $ = id => document.getElementById(id);
+  const money = n => "₹" + Number(n).toLocaleString("en-IN");
+  const level = r => r>=85?"CRITICAL":r>=70?"HIGH":r>=40?"MEDIUM":"LOW";
+  const action = r => r>=85?"HOLD + MANUAL REVIEW":r>=70?"MANUAL REVIEW":r>=40?"STEP-UP VERIFICATION":"ALLOW";
+  const cls = r => r>=85?"critical":r>=70?"high":r>=40?"medium":"low";
+  const barColor = r => r>=70?"var(--red)":r>=40?"var(--amber)":"var(--green)";
+
+  function toast(msg){
+    const el=$("toast"); el.textContent=msg; el.classList.add("show");
+    clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove("show"),2200);
+  }
+
+  function renderTransactions(){
+    const q=$("searchInput").value.trim().toLowerCase();
+    const filter=$("riskFilter").value;
+    const sort=$("sortSelect").value;
+    let arr=state.transactions.filter(t=>{
+      const match=!q || t.id.toLowerCase().includes(q) || t.account.toLowerCase().includes(q);
+      const rf=filter==="all" || (filter==="critical"&&t.risk>=85) || (filter==="high"&&t.risk>=70) || (filter==="low"&&t.risk<40);
+      return match&&rf;
+    });
+    arr.sort((a,b)=>sort==="risk"?b.risk-a.risk:sort==="amount"?b.amount-a.amount:b.time-a.time);
+
+    const body=$("transactionBody"); body.innerHTML="";
+    $("emptyState").style.display=arr.length?"none":"block";
+    arr.forEach(t=>{
+      const tr=document.createElement("tr");
+      if(t.id===state.selectedId) tr.classList.add("selected");
+      tr.tabIndex=0;
+      tr.innerHTML=`<td>${t.id}</td><td>${t.account}</td><td>${money(t.amount)}</td>
+        <td><b class="${t.risk>=70?"bad":t.risk>=40?"warn":"good"}">${t.risk}</b>
+        <div class="riskbar"><div style="width:${t.risk}%;background:${barColor(t.risk)}"></div></div></td>
+        <td><span class="badge ${cls(t.risk)}">${level(t.risk)}</span></td>`;
+      tr.addEventListener("click",()=>selectTransaction(t.id));
+      tr.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectTransaction(t.id)}});
+      body.appendChild(tr);
+    });
+  }
+
+  function selectTransaction(id){
+    state.selectedId=id; renderTransactions(); renderRisk();
+    const t=state.transactions.find(x=>x.id===id);
+    if(t) toast(`${id} selected • ${t.risk}/100 ${level(t.risk)}`);
+  }
+
+  function renderRisk(){
+    const t=state.transactions.find(x=>x.id===state.selectedId) || state.transactions[0];
+    if(!t) return;
+    $("selectedTxLabel").textContent=t.id+" • "+t.account;
+    const reasons=t.reasons.map(r=>`<div class="reason">
+      <div><b>${r[0]}</b><p>${r[1]}</p></div>
+      <div class="points" style="color:${r[2]<0?"var(--green)":"#ff8891"}">${r[2]>0?"+":""}${r[2]}</div>
+    </div>`).join("");
+    $("riskPanel").innerHTML=`
+      <div class="scorebox">
+        <div><div class="label">Transaction Risk Score</div><span class="badge ${cls(t.risk)}">${level(t.risk)} RISK</span></div>
+        <div class="bigscore" style="color:${barColor(t.risk)}">${t.risk}<span style="font-size:13px;color:#7891ad">/100</span></div>
+      </div>
+      ${reasons}
+      <div class="action" style="${t.risk<70?"border-color:#245b4d;background:#0d2924":""}">
+        <strong style="${t.risk<70?"color:var(--green)":""}">Recommended Action: ${action(t.risk)}</strong>
+        <p>${t.risk>=70?"Risk is supported by behavioural and network evidence. Investigate linked entities together before releasing funds.":"No strong coordinated fraud pattern is present. High value alone is not treated as fraud."}</p>
+      </div>`;
+  }
+
+  const graphLayouts = {
+    "FR-003":{
+      accounts:[["ACC-091",105,65],["ACC-092",105,130],["ACC-093",105,195],["ACC-094",105,260],["ACC-095",105,315]],
+      hubs:[["DEV-X17",335,72,"device"],["IP-99",345,170,"risk"],["ACC-999",585,170,"risk"],["MER-77",555,72,"merchant"],["MER-22",555,275,"merchant"]]
+    },
+    "FR-002":{
+      accounts:[["ACC-301",110,90],["ACC-302",110,155],["ACC-303",110,220],["ACC-304",110,285]],
+      hubs:[["DEV-41",335,82,"device"],["IP-31",345,170,"risk"],["MER-88",565,125,"merchant"],["MER-91",565,230,"merchant"]]
+    },
+    "FR-001":{
+      accounts:[["ACC-511",120,105],["ACC-512",120,175],["ACC-513",120,245]],
+      hubs:[["DEV-09",350,105,"device"],["IP-12",350,245,"risk"],["MER-14",575,175,"merchant"]]
+    }
+  };
+
+  function renderGraph(){
+    const ring=state.rings.find(r=>r.id===state.ringId);
+    const layout=graphLayouts[state.ringId];
+    $("graphTitle").textContent=`Ring #${ring.id} • Risk ${ring.risk}/100`;
+    const svg=$("graphSvg"); svg.innerHTML="";
+    const ns="http://www.w3.org/2000/svg";
+    const all=[...layout.accounts,...layout.hubs];
+    const hubs=layout.hubs;
+
+    layout.accounts.forEach(a=>{
+      hubs.forEach((h,idx)=>{
+        if(idx<2 || idx===hubs.length-1){
+          const line=document.createElementNS(ns,"line");
+          line.setAttribute("x1",a[1]);line.setAttribute("y1",a[2]);line.setAttribute("x2",h[1]);line.setAttribute("y2",h[2]);
+          line.setAttribute("class",h[3]==="risk"?"edge hot":"edge");svg.appendChild(line);
+        }
+      });
+    });
+    if(hubs.length>=3){
+      const line=document.createElementNS(ns,"line");
+      line.setAttribute("x1",hubs[1][1]);line.setAttribute("y1",hubs[1][2]);line.setAttribute("x2",hubs[2][1]);line.setAttribute("y2",hubs[2][2]);line.setAttribute("class","edge hot");svg.appendChild(line);
+    }
+
+    all.forEach(n=>{
+      const type=n[3]||"account";
+      const g=document.createElementNS(ns,"g");g.setAttribute("class","node");g.setAttribute("tabindex","0");
+      const circle=document.createElementNS(ns,"circle");
+      circle.setAttribute("cx",n[1]);circle.setAttribute("cy",n[2]);circle.setAttribute("r",type==="account"?26:31);
+      const style=type==="account"?["#172a43","#6aa8ff"]:type==="device"?["#272119","#ffc857"]:type==="merchant"?["#122d2a","#38e6a0"]:["#2c1620","#ff5f6d"];
+      circle.setAttribute("fill",style[0]);circle.setAttribute("stroke",style[1]);
+      const text=document.createElementNS(ns,"text");text.setAttribute("x",n[1]);text.setAttribute("y",n[2]+4);text.setAttribute("text-anchor","middle");text.setAttribute("class","node-label");text.textContent=n[0].replace("ACC-","A");
+      g.append(circle,text);
+      const inspect=()=>inspectNode(n[0],type,g);
+      g.addEventListener("click",inspect);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();inspect()}});
+      svg.appendChild(g);
+    });
+  }
+
+  function inspectNode(name,type,g){
+    document.querySelectorAll(".node.selected").forEach(x=>x.classList.remove("selected"));g.classList.add("selected");
+    const label=type==="account"?"Account":type==="device"?"Shared device":type==="merchant"?"Merchant":"High-risk node";
+    $("graphTooltip").innerHTML=`<b>${name}</b> • ${label}<br><span style="color:#8da4bf">${type==="account"?"Linked to the selected fraud ring. Click the matching account panel for account-level details.":"This node connects multiple accounts and contributes to the ring risk score."}</span>`;
+    if(type==="account") showAccount(name);
+  }
+
+  function renderRings(){
+    const box=$("ringList");box.innerHTML="";
+    state.rings.forEach(r=>{
+      const el=document.createElement("div");el.className="ring"+(r.id===state.ringId?" active":"");
+      el.innerHTML=`<div><h4>${r.id} • ${r.name}</h4><p>${r.members.length} accounts • ${r.desc}</p></div><div><span class="badge ${cls(r.risk)}">${r.risk} RISK</span></div>`;
+      el.addEventListener("click",()=>{state.ringId=r.id;renderRings();renderGraph();renderAccounts();toast(`${r.id} loaded into graph`)});
+      box.appendChild(el);
+    });
+  }
+
+  function renderAccounts(){
+    const ring=state.rings.find(r=>r.id===state.ringId);
+    const box=$("accountList");box.innerHTML="";
+    ring.members.slice(0,5).forEach((acc,i)=>{
+      const score=Math.max(52,ring.risk-(i*2+4));
+      const el=document.createElement("div");el.className="ring";
+      el.innerHTML=`<div><h4>${acc}</h4><p>${Math.max(2,6-i)} high-risk transactions • Ring ${ring.id}</p></div><div class="ring-score" style="color:${barColor(score)}">${score}</div>`;
+      el.addEventListener("click",()=>showAccount(acc,score));
+      box.appendChild(el);
+    });
+    if(state.ringId==="FR-003"){
+      const el=document.createElement("div");el.className="ring";
+      el.innerHTML=`<div><h4>ACC-218</h4><p>High-value transaction • Normal network behaviour</p></div><div class="ring-score good">18</div>`;
+      el.addEventListener("click",()=>showAccount("ACC-218",18));box.appendChild(el);
+    }
+  }
+
+  function showAccount(acc,score){
+    score=score ?? (acc==="ACC-218"?18:88);
+    const detail=$("accountDetail");detail.style.display="block";
+    detail.innerHTML=`<h4>${acc} • Account risk ${score}/100</h4>
+      <p><b>Graph status:</b> ${score>=70?"Connected to suspicious cluster":"No suspicious cluster membership"}<br>
+      <b>Behaviour:</b> ${score>=70?"Repeated shared infrastructure and synchronized transfers":"High value is consistent with legitimate account context"}<br>
+      <b>Suggested action:</b> ${action(score)}</p>`;
+    toast(`${acc} account intelligence opened`);
+  }
+
+  function scoreForm(){
+    const acc=$("acc").value.trim().toUpperCase();
+    const amt=Math.max(1,Math.min(1000000,Number($("amt").value)||1));
+    let score=10,reasons=[];
+    if(amt>25000){score+=12;reasons.push(["Unusual transaction amount","Amount is materially above baseline",12])}
+    if($("device").value==="new"){score+=13;reasons.push(["New device","Device has not been seen for this account",13])}
+    if($("device").value==="shared"){score+=35;reasons.push(["Shared suspicious device","Device is linked to multiple accounts",35])}
+    if($("destination").value==="new"){score+=10;reasons.push(["New destination","First transfer to destination",10])}
+    if($("destination").value==="fraud"){score+=30;reasons.push(["Known fraud-ring destination","Destination appears in coordinated cluster",30])}
+    if($("velocity").value==="fast"){score+=18;reasons.push(["High transaction velocity","5 transactions observed within 10 minutes",18])}
+    if($("location").value==="odd"){score+=12;reasons.push(["Location anomaly","Transaction location differs from usual behaviour",12])}
+    if($("device").value==="shared"&&$("destination").value==="fraud"){score+=10;reasons.push(["Graph correlation","Device and destination jointly connect to ring",10])}
+    score=Math.min(99,score);
+    if(!reasons.length) reasons=[["Normal behaviour","No strong anomaly or network evidence",0]];
+
+    state.total++;
+    const id="TX-"+state.total;
+    const tx={id,account:acc||"ACC-NEW",amount:amt,risk:score,time:Date.now(),reasons};
+    state.transactions.unshift(tx);state.selectedId=id;
+    $("metricTransactions").textContent=state.total.toLocaleString("en-IN");
+    $("scanResult").style.display="block";
+    $("scanResult").innerHTML=`<div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px"><b>${id} • ${tx.account}</b><b style="font-size:22px;color:${barColor(score)}">${score}/100</b></div>
+      <div style="font-weight:800;color:${barColor(score)};margin-bottom:7px">${level(score)} • ${action(score)}</div>
+      <div style="font-size:11px;line-height:1.7;color:#8da4bf">${reasons.map(r=>"• "+r[0]+" ("+(r[2]>0?"+":"")+r[2]+")").join("<br>")}</div>`;
+    updateHighMetric();renderTransactions();renderRisk();$("updateTime").textContent="Updated just now";toast(`${id} added to live monitor`);
+  }
+
+  function updateHighMetric(){
+    $("metricHigh").textContent=state.transactions.filter(t=>t.risk>=70).length + 37;
+  }
+
+  function injectSuspicious(){
+    const acc=["ACC-091","ACC-092","ACC-093","ACC-094"][Math.floor(Math.random()*4)];
+    state.total++;
+    const id="TX-"+state.total;
+    const risk=88+Math.floor(Math.random()*10);
+    state.transactions.unshift({id,account:acc,amount:4700+Math.floor(Math.random()*650),risk,time:Date.now(),reasons:[
+      ["Shared suspicious device","DEVICE-X17 reused across linked accounts",25],
+      ["Common destination","Funds converge on ACC-999",22],
+      ["High velocity","Cluster transacts within a short time window",18],
+      ["Graph correlation","Account is connected to FR-003",20]
+    ]});
+    state.selectedId=id;$("metricTransactions").textContent=state.total.toLocaleString("en-IN");
+    updateHighMetric();renderTransactions();renderRisk();$("updateTime").textContent="Updated just now";toast("Suspicious live event injected");
+  }
+
+  function randomNormalTx(){
+    if(state.paused) return;
+    state.total++;
+    const id="TX-"+state.total;
+    const risk=5+Math.floor(Math.random()*31);
+    const account="ACC-"+String(20+Math.floor(Math.random()*800)).padStart(3,"0");
+    state.transactions.unshift({id,account,amount:300+Math.floor(Math.random()*12000),risk,time:Date.now(),reasons:[
+      ["Normal behaviour","No strong coordinated fraud evidence detected",0]
+    ]});
+    if(state.transactions.length>30) state.transactions.pop();
+    $("metricTransactions").textContent=state.total.toLocaleString("en-IN");
+    $("latency").textContent=35+Math.floor(Math.random()*25);
+    $("updateTime").textContent="Updated just now";
+    renderTransactions();
+  }
+
+  $("scanForm").addEventListener("submit",e=>{e.preventDefault();scoreForm()});
+  ["searchInput","riskFilter","sortSelect"].forEach(id=>$(id).addEventListener(id==="searchInput"?"input":"change",renderTransactions));
+  $("pauseBtn").addEventListener("click",()=>{
+    state.paused=!state.paused;
+    $("pauseBtn").textContent=state.paused?"Resume stream":"Pause stream";
+    $("liveLabel").textContent=state.paused?"MONITORING PAUSED":"LIVE MONITORING";
+    $("liveDot").classList.toggle("paused",state.paused);
+    $("engineStatus").querySelector(".dot").classList.toggle("paused",state.paused);
+    $("engineText").textContent=state.paused?"Detection Stream Paused":"Detection Engine Online";
+    toast(state.paused?"Live stream paused":"Live stream resumed");
+  });
+  $("injectBtn").addEventListener("click",injectSuspicious);
+
+  document.querySelectorAll(".nav").forEach(btn=>btn.addEventListener("click",()=>{
+    document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
+    const target=$(btn.dataset.target); if(target) target.scrollIntoView({behavior:"smooth",block:"start"});
+  }));
+  document.querySelectorAll(".metric-card").forEach(card=>card.addEventListener("click",()=>{
+    if(card.dataset.filter){$("riskFilter").value=card.dataset.filter;renderTransactions();$("transactions").scrollIntoView({behavior:"smooth"})}
+    if(card.dataset.jump){$(card.dataset.jump).scrollIntoView({behavior:"smooth"})}
+  }));
+
+  renderTransactions();renderRisk();renderRings();renderGraph();renderAccounts();updateHighMetric();
+  setInterval(randomNormalTx,5000);
+})();
+</script>
+</body>
+</html>
